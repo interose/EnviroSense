@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row g-1">
+    {% for sensor in heatingSystem %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': sensor.value, 'unit': '°C', 'description' : sensor.name, 'type': 'temperature' } %}
+    {% endfor %}
+
+    {% for sensor in humiditySensors %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.temperature, 'unit': '°C', 'description' : sensor.name, 'color': sensor.color, 'type': 'temperature' } %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.humidity, 'unit': '%', 'description' : sensor.name, 'color': sensor.color, 'type': 'humidity' } %}
+    {% endfor %}
+
+    {% for sensor in power %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'power' } %}
+    {% endfor %}
+
+    {% for sensor in pv %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'pv' } %}
+    {% endfor %}
+
+    {% for sensor in gas %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'gas' } %}
+    {% endfor %}
+
+    {% for sensor in solar %}
+        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'solar' } %}
+    {% endfor %}
+</div>
+{% endblock %}

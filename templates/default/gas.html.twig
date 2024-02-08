@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row g-1">
+    <div class="chart-wrapper mb-3">
+        <h2>Current <small>in m³</small></h2>
+        <div id="chartCurrent" class="chart-container"></div>
+    </div>
+
+    <div class="chart-wrapper mb-3">
+        <h2>Last Days <small>in m³</small></h2>
+        <div id="chartLastDays" class="chart-container"></div>
+    </div>
+
+    <div class="chart-wrapper mb-3">
+        <h2>Last Months <small>in m³</small></h2>
+        <div id="chartMonthly" class="chart-container"></div>
+    </div>
+
+    <div class="chart-wrapper mb-3">
+        <h2>Last Years <small>in m³</small></h2>
+        <div id="chartYearly" class="chart-container"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {% block importmap %}{{ importmap('chart') }}{% endblock %}
+
+    <script>
+        const seriesColor = 'rgb(237,86,27)';
+        const seriesCurrentUnit = 'm³';
+
+        const seriesCurrent = [{% for item in current %}[{{ item.timestamp }}000, {{ item.consumption }}]{% if not loop.last %},{% endif %}{% endfor %}];
+        const seriesLastDays = [{% for item in lastDays %} {{'{'}} name: '{{ item.weekday }}', y: {{ item.consumption }} {{'}'}} {% if not loop.last %},{% endif %}{% endfor %}]; 
+        const seriesYearly = [{% for item in yearly %} {{'{'}} name: '{{ item.year }}', y: {{ item.consumption }} {{'}'}} {% if not loop.last %},{% endif %}{% endfor %}];
+        const seriesLastMonths = [{% for item in lastMonths %} {{'{'}} name: '{{ item.monthname }}', y: {{ item.consumption }} {{'}'}} {% if not loop.last %},{% endif %}{% endfor %}];
+        const seriesLastMonthsYearBefore = [{% for item in lastMonthsYearBefore %} {{'{'}} name: '{{ item.monthname }}', y: {{ item.consumption }} {{'}'}} {% if not loop.last %},{% endif %}{% endfor %}];
+    </script>
+{% endblock %}

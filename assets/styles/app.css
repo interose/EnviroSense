@@ -1,0 +1,88 @@
+body, html {
+    background-color: #000;
+    font-family: system-ui,-apple-system,BlinkMacSystemFont;
+}
+
+/* Navbar */
+.navbar-nav {
+    flex-grow: 1;
+}
+.nav-item {
+    flex-grow: 1;
+}
+.nav-item.active svg, .nav-item.active span {
+    opacity: 1;
+}
+.nav-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.nav-link:hover svg, .nav-link:hover span {
+    opacity: 1;
+}
+.nav-link span {
+    color: #fff;
+    font-size: 0.6rem;
+    opacity: .5;
+}
+.nav-link svg {
+    opacity: .5;
+}
+.nav-link .icon-wrapper {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+/* Dashboard */
+.dashboard-item {
+    color: #fff;
+    background-color: #1B1B1C;
+    border-radius: 5px;
+    height: 80px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dashboard-item .dashboard-item-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: 15px;
+    width: 15px;
+}
+.dashboard-item .dashboard-item-content span.value {
+    font-size: 2rem;
+}
+.dashboard-item .dashboard-item-content span.unit {
+    font-size: .8rem;
+}
+.dashboard-item .dashboard-item-description {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: .6rem;
+}
+
+.chart-wrapper {
+    background-color: rgb(27,27,28);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.chart-wrapper h2 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin: .5rem;
+}
+.chart-wrapper h2 small {
+    color: #666666;
+    font-size: .7rem;
+}
+.chart-wrapper .chart-container {
+    height: 200px;
+}
