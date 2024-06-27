@@ -1,0 +1,47 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block body %}
+    <div class="login-wrapper" >
+        <div class="login">
+
+            <form method="post">
+                <h1 class="h3 mb-3 font-weight-normal">Sign in to your account </h1>
+
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
+                </div>
+
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+{#                See https://symfony.com/doc/current/security/remember_me.html#}
+                <div class="d-flex checkbox-wrapper">
+                    <div class="d-flex">
+                        <div class="">
+                            <input id="remember" name="_remember_me" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
+                        </div>
+                        <div class="">
+                            <label for="remember">Remember me</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" type="submit">Sign in</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
