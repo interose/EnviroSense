@@ -5,6 +5,7 @@ namespace App\Repository\Solar;
 use App\Entity\Solar\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -19,6 +20,24 @@ class DailyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Daily::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $todayTotal): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+INSERT INTO solar_daily (ts, value, total)
+SELECT NOW(), :todayTotal, ds.total + :todayTotal
+FROM solar_daily ds 
+WHERE ts = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%d')
+ON DUPLICATE KEY UPDATE value = :todayTotal, total = ds.total + :todayTotal;
+SQL;
+        $conn->executeStatement($sql, [
+            'todayTotal' => $todayTotal,
+        ]);
     }
 
     /**

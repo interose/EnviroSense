@@ -21,6 +21,19 @@ class SensorRepository extends ServiceEntityRepository
         parent::__construct($registry, Sensor::class);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function update(string $mac, array $payload): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'INSERT INTO sensor (ts, mac, payload) VALUES (NOW(), :mac, :payload)';
+        $conn->executeStatement($sql, [
+            'mac' => $mac,
+            'payload' => json_encode($payload),
+        ]);
+    }
+
     public function getLatestValues()
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -39,29 +52,4 @@ SQL;
 
         return $resultSet->fetchAllAssociative();
     }
-
-//    /**
-//     * @return Sensor[] Returns an array of Sensor objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Sensor
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

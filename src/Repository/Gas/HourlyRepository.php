@@ -5,6 +5,7 @@ namespace App\Repository\Gas;
 use App\Entity\Gas\Hourly;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Hourly>
@@ -19,6 +20,19 @@ class HourlyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+INSERT INTO gas_hourly (ts, value) 
+VALUES (DATE_FORMAT(NOW(), "%Y-%c-%d %H:00:00"), 1) ON DUPLICATE KEY UPDATE value = value + 1
+SQL;
+        $conn->executeStatement($sql);
     }
 
     public function getLastHours(int $hours = 48)

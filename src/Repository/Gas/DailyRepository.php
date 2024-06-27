@@ -5,6 +5,7 @@ namespace App\Repository\Gas;
 use App\Entity\Gas\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -19,6 +20,32 @@ class DailyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Daily::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT total 
+FROM gas_daily 
+WHERE ts <= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), "%Y-%m-%d") 
+ORDER BY ts DESC LIMIT 1;
+SQL;
+        $resultSet = $conn->executeQuery($sql);
+
+        $total = $resultSet->fetchOne();
+        if (false === $total || !is_int($total)) {
+            throw new \Exception('Could not find previous gas total');
+        }
+
+        $sql = <<<SQL
+INSERT INTO gas_daily (ts, value, total) 
+VALUES (NOW(), 1, :total) ON DUPLICATE KEY UPDATE value = value + 1, total = total + 1
+SQL;
+        $conn->executeStatement($sql, ['total' => $total + 1]);
     }
 
     /**

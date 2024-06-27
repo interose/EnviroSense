@@ -5,6 +5,7 @@ namespace App\Repository\Photovoltaics;
 use App\Entity\Photovoltaics\Hourly;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Hourly>
@@ -19,6 +20,18 @@ class HourlyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $current): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'INSERT INTO photovoltaics_hourly (ts, value) VALUES (NOW(), :value)';
+        $conn->executeStatement($sql, [
+            'value' => $current,
+        ]);
     }
 
     /**

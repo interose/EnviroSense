@@ -5,6 +5,7 @@ namespace App\Repository\Photovoltaics;
 use App\Entity\Photovoltaics\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -19,6 +20,22 @@ class DailyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Daily::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $total): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+INSERT INTO photovoltaics_daily (ts, total)
+VALUES (NOW(), :total) ON DUPLICATE KEY UPDATE total = :total
+SQL;
+        $conn->executeStatement($sql, [
+            'total' => $total,
+        ]);
     }
 
     /**

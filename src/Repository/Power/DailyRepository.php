@@ -5,6 +5,7 @@ namespace App\Repository\Power;
 use App\Entity\Power\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -19,6 +20,22 @@ class DailyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Daily::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $total, int $scaler): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+INSERT INTO power_daily (ts, scaler, total) 
+VALUES (NOW(), :scaler, :total) ON DUPLICATE KEY UPDATE total = :total, scaler = :scaler
+SQL;
+        $conn->executeStatement($sql, [
+            'total' => $total,
+            'scaler' => $scaler,
+        ]);
     }
 
     /**

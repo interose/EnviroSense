@@ -5,6 +5,7 @@ namespace App\Repository\Solar;
 use App\Entity\Solar\Hourly;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Hourly>
@@ -19,6 +20,41 @@ class HourlyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $todayTotal): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        // The SUM() and AVG() functions return a DECIMAL value. Doctrine make a string out of it.
+        $sql = <<<SQL
+SELECT SUM(value) as value 
+FROM solar_hourly 
+WHERE ts BETWEEN 
+    DATE_FORMAT(NOW(), '%Y-%c-%d 00:00:00') AND 
+    DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 HOUR), '%Y-%c-%d %H:59:59')
+SQL;
+        $resultSet = $conn->executeQuery($sql, ['todayTotal' => $todayTotal]);
+
+        $prevTotal = $resultSet->fetchOne();
+        if (false === $prevTotal) {
+            // no previous value, so insert the current value
+            $diff = $todayTotal;
+        } else {
+            // else, try to subtract the previous value from the current value
+            $diff = $todayTotal - intval($prevTotal);
+        }
+
+        $sql = <<<SQL
+INSERT INTO solar_hourly (ts, value) 
+VALUES (DATE_FORMAT(NOW(), '%Y-%c-%d %H:00:00'), :value) ON DUPLICATE KEY UPDATE value = :value
+SQL;
+        $conn->executeStatement($sql, [
+            'value' => $diff,
+        ]);
     }
 
     /**

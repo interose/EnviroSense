@@ -62,4 +62,18 @@ class ApiToken
     {
         return $this->getExpiresAt() <= new \DateTime();
     }
+
+    public function setExpiresAt(\DateTimeInterface $expiresAt): static
+    {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }

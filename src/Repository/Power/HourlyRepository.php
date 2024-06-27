@@ -5,6 +5,7 @@ namespace App\Repository\Power;
 use App\Entity\Power\Hourly;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
 
 /**
  * @extends ServiceEntityRepository<Hourly>
@@ -19,6 +20,19 @@ class HourlyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $value, int $scaler): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'INSERT INTO power_hourly (ts, value, scaler) VALUES (NOW(), :value, :scaler)';
+        $conn->executeStatement($sql, [
+            'value' => $value,
+            'scaler' => $scaler,
+        ]);
     }
 
     /**
