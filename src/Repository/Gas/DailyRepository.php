@@ -73,7 +73,7 @@ SQL;
         $sql = <<<SQL
 WITH RECURSIVE all_dates(dt) AS (
     -- anchor
-    SELECT DATE_SUB(now(), INTERVAL 7 DAY) dt
+    SELECT DATE_SUB(now(), INTERVAL 6 DAY) dt
     UNION ALL 
     -- recursion with stop condition
     SELECT dt + interval 1 DAY FROM all_dates WHERE dt + interval 1 DAY <= now()
@@ -81,7 +81,7 @@ WITH RECURSIVE all_dates(dt) AS (
 SELECT DATE_FORMAT(ad.dt, '%a') as weekday, IFNULL(consumption,0) as consumption
 FROM all_dates as ad
 LEFT JOIN (
-    SELECT DATE_FORMAT(ts, '%Y-%m-%d') AS myday, ROUND(value * 0.01) AS consumption 
+    SELECT DATE_FORMAT(ts, '%Y-%m-%d') AS myday, ROUND(value * 0.01, 2) AS consumption 
     FROM gas_daily
     WHERE ts >= DATE_SUB(now(), INTERVAL 7 DAY) 
     ORDER BY ts ASC
