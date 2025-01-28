@@ -99,3 +99,17 @@ Clears cache and log files
 ```
 $ make clean
 ```
+
+# Symfony Scripts
+
+```
+$ bin/console app:recalc-solar-daily
+```
+
+This script recalculates the total column for the `solar_daily` table. This column was not filled within the old database and in order to keep the same structure for every `*_daily` tables there is also a total column for this table.
+This script must only run once the transition from the old database to the new database is complete.
+
+```
+$ bin/console app:calc-power-daily
+```
+The smart meter delivers only the current power consumption and the overall consumption.
