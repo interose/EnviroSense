@@ -17,6 +17,7 @@ class DashboardAdapter
     private const CALORIFIC_VALUE = 11.280;
     private const CONDITION_VALUE = 0.8888;
 
+    private const DEW_POINT_SENSOR = '30:83:98:B1:60:5D';
 
     public function __construct(
         private \App\Repository\SensorRepository $sensorRepository,
@@ -28,6 +29,13 @@ class DashboardAdapter
         private \App\Repository\Solar\HourlyRepository $solarHourlyRepository,
         private \App\Repository\Photovoltaics\HourlyRepository $pvHourlyRepository,
     ) {
+    }
+
+    public function getLatestDewPointSensorValue(): DewPointDto
+    {
+        $dewPointSensorValue = $this->sensorRepository->findOneBy(['mac' => self::DEW_POINT_SENSOR], ['ts' => 'DESC']);
+
+        return DewPointDto::hydrateFromArray($dewPointSensorValue->getPayload());
     }
 
     /**

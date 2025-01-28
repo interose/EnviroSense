@@ -45,6 +45,7 @@ INNER JOIN (
     SELECT MAX(id) as id, mac FROM sensor GROUP BY mac
 ) AS src ON src.id = s.id
 LEFT JOIN sensor_description as sd ON s.mac = sd.mac
+WHERE sd.name IS NOT NULL 
 ORDER BY sd.sequence
 SQL;
 

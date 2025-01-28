@@ -20,6 +20,7 @@ class DefaultController extends AbstractController
             'gas' => $adapter->getActualGasValues(),
             'solar' => $adapter->getActualSolarValues(),
             'pv' => $adapter->getActualPvValues(),
+            'dewPointSensor' => $adapter->getLatestDewPointSensorValue(),
         ]);
     }
 
