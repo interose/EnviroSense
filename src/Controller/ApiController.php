@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Anker\Daily as AnkerDaily;
+use App\Entity\Anker\Hourly as AnkerHourly;
 use App\Entity\Gas\Daily as GasDaily;
 use App\Entity\Gas\Hourly as GasHourly;
 use App\Entity\Photovoltaics\Daily as PvDaily;
@@ -11,7 +13,8 @@ use App\Entity\Power\Hourly as PowerHourly;
 use App\Entity\Sensor;
 use App\Entity\Solar\Daily as SolarDaily;
 use App\Entity\Solar\Hourly as SolarHourly;
-use App\Lib\SML_PARSER;
+use App\Lib\AnkerDailyDto;
+use App\Lib\AnkerHourlyDto;
 use App\Lib\SmlParser;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -135,6 +138,36 @@ class ApiController extends AbstractController
             unset($content['m']);
 
             $em->getRepository(Sensor::class)->update($mac, $content);
+        } catch (\Exception $e) {
+            $logger->error($e->getMessage());
+
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        return new Response(null, Response::HTTP_OK);
+    }
+
+    #[Route('/anker/add/daily', name: 'anker_add_daily', methods: ['POST'])]
+    public function ankerAddDailyAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em): Response
+    {
+        try {
+            $ankerDto = AnkerDailyDto::fromJson($request->getContent());
+            $em->getRepository(AnkerDaily::class)->update($ankerDto);
+        } catch (\Exception $e) {
+            $logger->error($e->getMessage());
+
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        return new Response(null, Response::HTTP_OK);
+    }
+
+    #[Route('/anker/add/hourly', name: 'anker_add_hourly', methods: ['POST'])]
+    public function ankerAddCurrentAction(Request $request, LoggerInterface $logger, EntityManagerInterface $em): Response
+    {
+        try {
+            $ankerDto = AnkerHourlyDto::fromJson($request->getContent());
+            $em->getRepository(AnkerHourly::class)->add($ankerDto);
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
 
