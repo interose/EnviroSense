@@ -9,6 +9,7 @@ LOCAL_PORT ?= 3336
 SSH_PORT ?= 8122
 LOCAL_MYSQL_USER ?= root
 REMOTE_MYSQL_USER ?= root
+PROJECT_NAME ?= EnviroSense
 
 .PHONY: help
 help:
@@ -91,3 +92,14 @@ clean: ## Clean the cache and logs
 	rm -rf var/cache/*
 	rm -rf var/log/*
 	rm -rf var/tailwind/*
+
+.PHONY: deploy
+deploy: ## Deploy the project to the remote server
+	@if [ -z "$(USER)" ] || [ -z "$(HOST)" ]; then \
+  		echo "Deploying $(PROJECT_NAME) to $(HOST)..."; \
+  		$(PHP) bin/console asset-map:compile; \
+  		ssh -i $(KEY) $(USER)@$(HOST) "if [ -d /var/www/$(PROJECT_NAME)/public/assets ]; then rm -rf /var/www/$(PROJECT_NAME)/public/assets; fi"; \
+  		rsync -e "ssh -i $(KEY)" --exclude-from "exclude-list" -avzh . $(USER)@$(HOST):/var/www/$(PROJECT_NAME) --delete; \
+  		ssh -i $(KEY) $(USER)@$(HOST) "cd /var/www/$(PROJECT_NAME) && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader"; \
+  		ssh -i $(KEY) $(USER)@$(HOST) "rm -rf /var/www/$(PROJECT_NAME)/var/cache/prod"; \
+  	fi

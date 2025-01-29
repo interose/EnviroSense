@@ -100,6 +100,20 @@ Clears cache and log files
 $ make clean
 ```
 
+
+### Deploy
+Deploys the application to the server
+
+| Environment variable | Description                           | Default value        |
+|----------------------|---------------------------------------|----------------------|
+| `USER`               | SSH User                              |                      |
+| `HOST`               | IP or hostname of the database server |                      |
+| `KEY`                | A SSH key                             |                      |
+```
+$ make deploy
+```
+
+
 # Symfony Scripts
 
 ```
