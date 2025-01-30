@@ -18,6 +18,10 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'login' => [
+        'path' => './assets/login.js',
+        'entrypoint' => true,
+    ],
     'chart' => [
         'path' => './assets/chart.js',
         'entrypoint' => true,
