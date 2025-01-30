@@ -95,11 +95,13 @@ clean: ## Clean the cache and logs
 
 .PHONY: deploy
 deploy: ## Deploy the project to the remote server
-	@if [ -z "$(USER)" ] || [ -z "$(HOST)" ]; then \
+	@if [ -z "$(REMOTE_USER)" ] || [ -z "$(HOST)" ] || [ -z "$(SSH_PORT)" ]; then \
+  		echo "Please provide REMOTE_USER and HOST as environment variables."; \
+	else \
   		echo "Deploying $(PROJECT_NAME) to $(HOST)..."; \
   		$(PHP) bin/console asset-map:compile; \
-  		ssh -i $(KEY) $(USER)@$(HOST) "if [ -d /var/www/$(PROJECT_NAME)/public/assets ]; then rm -rf /var/www/$(PROJECT_NAME)/public/assets; fi"; \
-  		rsync -e "ssh -i $(KEY)" --exclude-from "exclude-list" -avzh . $(USER)@$(HOST):/var/www/$(PROJECT_NAME) --delete; \
-  		ssh -i $(KEY) $(USER)@$(HOST) "cd /var/www/$(PROJECT_NAME) && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader"; \
-  		ssh -i $(KEY) $(USER)@$(HOST) "rm -rf /var/www/$(PROJECT_NAME)/var/cache/prod"; \
+  		ssh -p $(SSH_PORT) $(REMOTE_USER)@$(HOST) "if [ -d /var/www/$(PROJECT_NAME)/public/assets ]; then rm -rf /var/www/$(PROJECT_NAME)/public/assets; fi"; \
+  		rsync -e "ssh -p $(SSH_PORT) " --exclude-from "exclude-list" -avzh . $(REMOTE_USER)@$(HOST):/var/www/$(PROJECT_NAME) --delete; \
+  		ssh -p $(SSH_PORT) $(REMOTE_USER)@$(HOST) "cd /var/www/$(PROJECT_NAME) && composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader"; \
+  		ssh -p $(SSH_PORT) $(REMOTE_USER)@$(HOST) "rm -rf /var/www/$(PROJECT_NAME)/var/cache/prod"; \
   	fi
