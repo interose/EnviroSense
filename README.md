@@ -106,9 +106,9 @@ Deploys the application to the server
 
 | Environment variable | Description                           | Default value        |
 |----------------------|---------------------------------------|----------------------|
-| `USER`               | SSH User                              |                      |
+| `REMOTE_USER`        | SSH User                              |                      |
 | `HOST`               | IP or hostname of the database server |                      |
-| `KEY`                | A SSH key                             |                      |
+| `SSH_PORT`           | The SSH Port                          |                      |
 ```
 $ make deploy
 ```
