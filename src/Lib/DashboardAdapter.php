@@ -35,7 +35,7 @@ class DashboardAdapter
     {
         $dewPointSensorValue = $this->sensorRepository->findOneBy(['mac' => self::DEW_POINT_SENSOR], ['ts' => 'DESC']);
 
-        return DewPointDto::hydrateFromArray($dewPointSensorValue->getPayload());
+        return DewPointDto::hydrateFromArray(is_null($dewPointSensorValue) ? [] : $dewPointSensorValue->getPayload());
     }
 
     /**

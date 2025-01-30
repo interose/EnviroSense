@@ -25,7 +25,7 @@ class DewPointDto
             $data['te1'] ?? 0,
             $data['hum1'] ?? 0,
             $data['dewpoint1'] ?? 0,
-            $data['vent'] === 'on' ? 'On' : 'Off',
+            ($data['vent'] ?? '') === 'on' ? 'On' : 'Off',
         );
     }
 }
