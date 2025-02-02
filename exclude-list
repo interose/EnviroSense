@@ -5,7 +5,7 @@
 .idea
 node_modules
 var
-vendor
+/vendor
 exclude-list
 .php_cs.cache
 package.json
