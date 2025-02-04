@@ -6,15 +6,26 @@ use App\Entity\ApiToken;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+
+    }
+
     public function load(ObjectManager $manager): void
     {
         $user = new User();
         $user->setUsername('Testuser');
         $user->setRoles(['ROLE_USER', 'ROLE_API']);
-        $user->setPassword('test123');
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            'Testpassword'
+        );
+        $user->setPassword($hashedPassword);
 
         $manager->persist($user);
 
