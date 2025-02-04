@@ -2,5 +2,32 @@
 
 {% block body %}
 <div class="row g-1">
+    <div class="col-12">
+        <table class="table table-sm table-sensor">
+            {% for item in latest %}
+                <tr>
+                    <td style="color: {{ item.color }}">{{ item.name|capitalize }}</td>
+                    <td style="color: {{ item.color }}"><i class="fa fa-battery-full" aria-hidden="true"></i> {{ item.bat|number_format(2, ',', '.') }} V</td>
+                    <td style="color: {{ item.color }}"><i class="fa fa-clock-o" aria-hidden="true"></i> {{ item.ts }}</td>
+                    <td style="color: {{ item.color }}"><i class="fa fa-tint" aria-hidden="true"></i> {{ item.humidity|number_format(0, ',', '.') }} %</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="chart-wrapper mb-3">
+        <div id="chartCurrent" class="chart-container"></div>
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        const series = [{% for sensor in sensors %} {
+            name: 'Humidity - {{ sensor.name }}',
+            data: [{% for item in sensor.data %}[ {{ item.ts|date('U') }}000, {{ item.humidity }} ]{% if not loop.last %},{% endif %}{% endfor %}],
+            color: '{{ sensor.color }}' } {% if not loop.last %},{% endif %}{% endfor %}];
+    </script>
 {% endblock %}

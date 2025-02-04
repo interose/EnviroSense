@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Sensor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -52,5 +53,20 @@ SQL;
         $resultSet = $conn->executeQuery($sql);
 
         return $resultSet->fetchAllAssociative();
+    }
+
+    public function getLast24Hours()
+    {
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Berlin'));
+        $now->modify('- 48 hours');
+
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.ts > :val')
+            ->setParameter('val', $now->format('Y-m-d H:i:s'))
+            ->orderBy('p.ts', 'ASC')
+            ->getQuery()
+        ;
+
+        return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 }
