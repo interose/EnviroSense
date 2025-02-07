@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% set colorInside = '#FFA500' %}
+{% set colorOutside = '#1E90FF' %}
+
 {% block body %}
 <div class="row g-1 mt-2">
     {% for sensor in power %}
@@ -49,18 +52,18 @@
             </div>
             <table class="table table-sm table-borderless mb-0">
                 <tr>
-                    <td><p class="text-end m-0">{{ dewPointSensor.outsideTemperature }} °C</p></td>
-                    <td><p class="text-end m-0">{{ dewPointSensor.outsideHumidity }} %</p></td>
-                    <td><p class="text-end m-0">{{ dewPointSensor.outsideDewPoint }}</p></td>
+                    <td><p class="text-end m-0" style="color: {{ colorInside }}">{{ dewPointSensor.insideTemperature }} °C</p></td>
+                    <td><p class="text-end m-0" style="color: {{ colorInside }}">{{ dewPointSensor.insideHumidity }} %</p></td>
+                    <td><p class="text-end m-0" style="color: {{ colorInside }}">{{ dewPointSensor.insideDewPoint }}</p></td>
                 </tr>
-                <tr>
-                    <td><p class="text-end m-0">{{ dewPointSensor.insideTemperature }} °C</p></td>
-                    <td><p class="text-end m-0">{{ dewPointSensor.insideHumidity }} %</p></td>
-                    <td><p class="text-end m-0">{{ dewPointSensor.insideDewPoint }}</p></td>
+                <tr style="color: {{ colorOutside }}">
+                    <td><p class="text-end m-0" style="color: {{ colorOutside }}">{{ dewPointSensor.outsideTemperature }} °C</p></td>
+                    <td><p class="text-end m-0" style="color: {{ colorOutside }}">{{ dewPointSensor.outsideHumidity }} %</p></td>
+                    <td><p class="text-end m-0" style="color: {{ colorOutside }}">{{ dewPointSensor.outsideDewPoint }}</p></td>
                 </tr>
                 <tr>
                     <td colspan="3">
-                        Ventilation: {{ dewPointSensor.ventOn }}
+                        Ventilation: {{ dewPointSensor.ventilation }}
                     </td>
                 </tr>
             </table>

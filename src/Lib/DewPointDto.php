@@ -11,9 +11,8 @@ class DewPointDto
         public float $insideTemperature,
         public float $insideHumidity,
         public float $insideDewPoint,
-        public string $ventOn,
-    )
-    {
+        public string $ventilation,
+    ) {
     }
 
     public static function hydrateFromArray(array $data): self

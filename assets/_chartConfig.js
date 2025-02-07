@@ -14,8 +14,8 @@ Highcharts.setOptions({
     },
 });
 
-const chartBackgroundColor = 'rgb(27,27,28)';
-const chartLineColor = 'rgb(48,48,48)';
+export const chartBackgroundColor = 'rgb(27,27,28)';
+export const chartLineColor = 'rgb(48,48,48)';
 const dataLabelFontColor = '#666666';
 
 export const baseDataLabelStyle = {
@@ -127,6 +127,22 @@ export const lastDaysChartConfig = {
         },
         labels: {
             enabled: false
+        },
+        gridLineColor: chartLineColor,
+    }
+};
+
+export const baseChartConfig = {
+    title: { text: '' },
+    tooltip: { enabled: false },
+    credits: { enabled: false },
+    legend: { enabled: false },
+    yAxis: {
+        title: {
+            text: ''
+        },
+        labels: {
+            enabled: true
         },
         gridLineColor: chartLineColor,
     }

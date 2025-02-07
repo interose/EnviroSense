@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Lib\DashboardAdapter;
+use App\Lib\DewpointSensorAdapter;
+use App\Lib\HumiditySensorAdapter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,7 +98,7 @@ class DefaultController extends AbstractController
         $yearly = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
-        
+
         return $this->render('default/solar.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
@@ -107,9 +109,15 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/sensors', name: 'app_sensors')]
-    public function sensorsAction(): Response
+    public function sensorsAction(HumiditySensorAdapter $humSensorAdapter, DewpointSensorAdapter $dewSensorAdapter): Response
     {
+        $dewSensorAdapter->fetch();
 
-        return $this->render('default/sensors.html.twig');
+        return $this->render('default/sensors.html.twig', [
+            'currentHumidity' => $humSensorAdapter->getCurrentData(),
+            'humiditySeries' => $humSensorAdapter->getPastSeries(),
+            'currentDewpoint' => $dewSensorAdapter->current,
+            'dewpointSeries' => $dewSensorAdapter->pastSeries,
+        ]);
     }
 }

@@ -1,6 +1,79 @@
 {% extends 'base.html.twig' %}
 
+{% set colorInside = '#FFA500' %}
+{% set colorOutside = '#1E90FF' %}
+
 {% block body %}
-<div class="row g-1">
+<div class="row g-1 mt-1">
+    <div class="chart-wrapper mb-3">
+        <h2>Humidity</h2>
+        <div class="m-1">
+            <table class="table table-sm table-sensor m-0">
+                {% for item in currentHumidity %}
+                    <tr {% if loop.last %}class="last"{% endif %}>
+                        <td style="color: {{ item.color }}">{{ item.name|capitalize }}</td>
+                        <td style="color: {{ item.color }}; text-align: center;">{{ item.bat|number_format(2, ',', '.') }} V</td>
+                        <td style="color: {{ item.color }}; text-align: center;">{{ item.ts }}</td>
+                        <td style="color: {{ item.color }}; text-align: right;">{{ item.humidity|number_format(0, ',', '.') }} %</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="chartLastHours" class="chart-container"></div>
+    </div>
+
+    <div class="chart-wrapper">
+
+
+        <h2>Dewpoint</h2>
+        <div class="m-1">
+            <table class="table table-sm table-sensor m-0">
+                <tr>
+                    <td style="color: {{ colorInside }}">Inside</td>
+                    <td style="text-align: center; color: {{ colorInside }};">{{ currentDewpoint.dto.insideTemperature }}°C</td>
+                    <td style="text-align: center; color: {{ colorInside }};">{{ currentDewpoint.dto.insideHumidity }}%</td>
+                    <td style="text-align: right; color: {{ colorInside }};">{{ currentDewpoint.dto.insideDewPoint }}</td>
+                </tr>
+                <tr>
+                    <td style="color: {{ colorOutside }}">Outside</td>
+                    <td style="text-align: center; color: {{ colorOutside }};">{{ currentDewpoint.dto.outsideTemperature }}°C</td>
+                    <td style="text-align: center; color: {{ colorOutside }};">{{ currentDewpoint.dto.outsideHumidity }}%</td>
+                    <td style="text-align: right; color: {{ colorOutside }};">{{ currentDewpoint.dto.outsideDewPoint }}</td>
+                </tr>
+                <tr class="last">
+                    <td colspan="2">
+                        Ventilation: {{ currentDewpoint.dto.ventilation }}
+                    </td>
+                    <td colspan="2" style="text-align: right">
+                        Last seen: {{ currentDewpoint.ts }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="chartDewPointPastHours" class="chart-container"></div>
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {% block importmap %}{{ importmap('chartSensors') }}{% endblock %}
+
+    <script>
+        const series = [{% for sensor in humiditySeries %} {
+            name: 'Humidity - {{ sensor.name }}',
+            data: [{% for item in sensor.data %}[ {{ item.ts|date('U') }}000, {{ item.humidity }} ]{% if not loop.last %},{% endif %}{% endfor %}],
+            color: '{{ sensor.color }}' } {% if not loop.last %},{% endif %}{% endfor %}];
+
+        const dewPointInside = {
+            name: 'Inside',
+            data: [{% for inside in dewpointSeries %}[{{ inside.ts|date('U') }}000, {{ inside.dto.insideDewPoint }}]{% if not loop.last %},{% endif %}{% endfor %}],
+            color: '{{ colorInside }}'
+        };
+
+        const dewPointOutside = {
+            name: 'Outside',
+            data: [{% for outside in dewpointSeries %}[{{ outside.ts|date('U') }}000, {{ outside.dto.outsideDewPoint }}]{% if not loop.last %},{% endif %}{% endfor %}],
+            color: '{{ colorOutside }}'
+        };
+    </script>
 {% endblock %}
