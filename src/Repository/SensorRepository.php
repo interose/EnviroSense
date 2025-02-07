@@ -23,7 +23,7 @@ class SensorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws Exception
+     * @throws/Exception
      */
     public function update(string $mac, array $payload): void
     {
@@ -35,7 +35,10 @@ class SensorRepository extends ServiceEntityRepository
         ]);
     }
 
-    public function getLatestValues()
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getLatestValues(): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -55,10 +58,10 @@ SQL;
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getLast24Hours()
+    public function getLastHours(int $pastHours = 48)
     {
         $now = new \DateTime('now', new \DateTimeZone('Europe/Berlin'));
-        $now->modify('- 48 hours');
+        $now->modify(sprintf('- %d hours', $pastHours));
 
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.ts > :val')
@@ -68,5 +71,35 @@ SQL;
         ;
 
         return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
+    }
+
+    public function getLatestDewpointValues()
+    {
+        $query = $this->createQueryBuilder('s')
+            ->andWhere('s.mac = :mac')
+            ->setParameter('mac', Sensor::DEWPOINT_SENSOR_MAC)
+            ->orderBy('s.ts', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
+
+    public function getLastHoursDewpointValues(int $pastHours = 48)
+    {
+        $now = new \DateTime('now', new \DateTimeZone('Europe/Berlin'));
+        $now->modify(sprintf('- %d hours', $pastHours));
+
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.ts > :val')
+            ->setParameter('val', $now->format('Y-m-d H:i:s'))
+            ->andWhere('p.mac = :mac')
+            ->setParameter('mac', Sensor::DEWPOINT_SENSOR_MAC)
+            ->orderBy('p.ts', 'ASC')
+            ->getQuery()
+        ;
+
+        return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
+
     }
 }

@@ -3,15 +3,12 @@
 namespace App\Controller;
 
 use App\Lib\DashboardAdapter;
+use App\Lib\DewpointSensorAdapter;
 use App\Lib\HumiditySensorAdapter;
-use App\Lib\TimeToHumanReadable;
-use App\Repository\SensorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
-
 
 class DefaultController extends AbstractController
 {
@@ -99,7 +96,7 @@ class DefaultController extends AbstractController
         $yearly = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
-        
+
         return $this->render('default/solar.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
@@ -110,11 +107,15 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/sensors', name: 'app_sensors')]
-    public function sensorsAction(HumiditySensorAdapter $humSensorAdapter): Response
+    public function sensorsAction(HumiditySensorAdapter $humSensorAdapter, DewpointSensorAdapter $dewSensorAdapter): Response
     {
+        $dewSensorAdapter->fetch();
+
         return $this->render('default/sensors.html.twig', [
-            'latest' => $humSensorAdapter->getLatestData(),
-            'sensors' => $humSensorAdapter->getLast24Hours(),
+            'currentHumidity' => $humSensorAdapter->getCurrentData(),
+            'humiditySeries' => $humSensorAdapter->getPastSeries(),
+            'currentDewpoint' => $dewSensorAdapter->current,
+            'dewpointSeries' => $dewSensorAdapter->pastSeries,
         ]);
     }
 }

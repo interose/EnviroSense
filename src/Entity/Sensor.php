@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SensorRepository::class)]
 class Sensor
 {
+    public const DEWPOINT_SENSOR_MAC = '30:83:98:B1:60:5D';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

@@ -101,11 +101,18 @@ body, html {
 
 /* Sensor Table */
 .table-sensor tr {
-    border-bottom: none;
-    border-width: 0;
+    border: none;
+    border-color: rgb(48,48,48);
+    /*border-bottom: none;*/
+    /*border-width: 0;*/
+    /*border-color: transparent;*/
+    /*border-top: 1px solid red;*/
+}
+.table-sensor tr.last {
     border-color: transparent;
 }
 .table-sensor td {
     font-size:.7rem;
     background-color: transparent;
+    color: #fff;
 }

@@ -7,23 +7,16 @@ use App\Repository\SensorRepository;
 
 class HumiditySensorAdapter
 {
-    /**
-     * HumiditySensorAdapter constructor.
-     * @param SensorRepository $sensorRepository The sensor repository
-     * @param SensorDescriptionRepository $sensorDescriptionRepository The sensor description repository
-     */
     public function __construct(
         private readonly SensorRepository $sensorRepository,
-        private readonly SensorDescriptionRepository $sensorDescriptionRepository)
-    {
+        private readonly SensorDescriptionRepository $sensorDescriptionRepository,
+    ) {
     }
 
     /**
-     * Returns an array of all sensors with their corresponding latest value
-     *
-     * @return array
+     * @throws \Doctrine\DBAL\Exception
      */
-    public function getLatestData(): array
+    public function getCurrentData(): array
     {
         $latest = array_map(function ($item) {
             $payload = json_decode($item['payload'], true);
@@ -41,17 +34,15 @@ class HumiditySensorAdapter
     }
 
     /**
-     * Returns the data for the last 24 hours
-     *
-     * @return array
+     * Returns the data for the last 24 hours.
      */
-    public function getLast24Hours()
+    public function getPastSeries(): array
     {
         $sensorHashMap = $this->sensorDescriptionRepository->getMacHashMap();
-        $data = $this->sensorRepository->getLast24Hours();
+        $data = $this->sensorRepository->getLastHours();
         $hum = [];
 
-        array_walk($data, function($item) use (&$hum, $sensorHashMap) {
+        array_walk($data, function ($item) use (&$hum, $sensorHashMap) {
             $mac = $item['mac'];
 
             if (!isset($hum[$mac]['mac'])) {
@@ -66,7 +57,7 @@ class HumiditySensorAdapter
             if (isset($sensorHashMap[$mac])) {
                 $hum[$mac]['data'][] = [
                     'ts' => $item['ts']->getTimestamp(),
-                    'humidity' => $item['payload']['h'] ?? 0
+                    'humidity' => $item['payload']['h'] ?? 0,
                 ];
             }
         });
