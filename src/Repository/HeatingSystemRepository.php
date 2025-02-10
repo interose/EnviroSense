@@ -31,4 +31,18 @@ class HeatingSystemRepository extends ServiceEntityRepository
 
         return $result[0] ?? 0;
     }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function insert(string $name, string $value)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'INSERT INTO heating_system (name, value, ts) VALUES (:name, :value, NOW())';
+
+        $conn->executeStatement($sql, [
+            'name' => $name,
+            'value' => $value,
+        ]);
+    }
 }

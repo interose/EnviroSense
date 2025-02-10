@@ -16,14 +16,18 @@ use App\Entity\Solar\Hourly as SolarHourly;
 use App\Lib\AnkerDailyDto;
 use App\Lib\AnkerHourlyDto;
 use App\Lib\SmlParser;
+use App\Repository\HeatingSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api')]
+#[IsGranted('ROLE_API')]
 class ApiController extends AbstractController
 {
     #[Route('/gas/add', name: 'gas_add', methods: ['POST'])]
@@ -173,6 +177,33 @@ class ApiController extends AbstractController
         try {
             $ankerDto = AnkerHourlyDto::fromJson($request->getContent());
             $em->getRepository(AnkerHourly::class)->add($ankerDto);
+        } catch (\Exception $e) {
+            $logger->error($e->getMessage());
+
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        return new Response(null, Response::HTTP_OK);
+    }
+
+    #[Route('/heater/add', name: 'heater_add', methods: ['POST'])]
+    public function heatingAddAction(Request $request, LoggerInterface $logger, HeatingSystemRepository $repository): Response
+    {
+        try {
+            $content = json_decode($request->getContent(), true);
+            if (false === $content || is_null($content)) {
+                throw new \Exception(sprintf('Could not decode content! Content was %s', $request->getContent()));
+            }
+
+            if (1 !== count($content)) {
+                throw new \Exception('Invalid amount of input params!');
+            }
+
+            $key = array_key_first($content);
+            $value = intval($content[$key] ?? 0);
+
+            $repository->insert($key, $value);
+
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
 
