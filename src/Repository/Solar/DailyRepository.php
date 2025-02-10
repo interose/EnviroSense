@@ -4,8 +4,8 @@ namespace App\Repository\Solar;
 
 use App\Entity\Solar\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Exception;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -41,7 +41,7 @@ SQL;
     }
 
     /**
-     * Returns the todays solar yield
+     * Returns the todays solar yield.
      */
     public function getTodaysYield()
     {
@@ -57,7 +57,7 @@ SQL;
     }
 
     /**
-     * Returns the solar yield of the last days in kWh
+     * Returns the solar yield of the last days in kWh.
      */
     public function getLastDays(int $lastDays = 7): array
     {
@@ -69,7 +69,7 @@ SQL;
     }
 
     /**
-     * Return the solar yield grouped by year in kWh
+     * Return the solar yield grouped by year in kWh.
      */
     public function getGroupedByYear(): array
     {
@@ -81,7 +81,7 @@ SQL;
     }
 
     /**
-     * Return the solar yield grouped by month in kWh
+     * Return the solar yield grouped by month in kWh.
      */
     public function getLastMonthsByMonths(int $lastMonths = 7): array
     {
@@ -112,7 +112,7 @@ SQL;
     }
 
     /**
-     * Return the solar yield grouped by month in kWh
+     * Return the solar yield grouped by month in kWh.
      */
     public function getLastMonthsByMonthsYearBefore(int $lastMonths = 7): array
     {

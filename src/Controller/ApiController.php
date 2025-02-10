@@ -74,7 +74,7 @@ class ApiController extends AbstractController
     public function photovoltaicsAddAction(
         Request $request,
         LoggerInterface $logger,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): Response {
         try {
             $content = json_decode($request->getContent(), true);
@@ -108,11 +108,16 @@ class ApiController extends AbstractController
     {
         try {
             $content = json_decode($request->getContent(), true);
-            if (false === $content || is_null($content) || !array_key_exists('value', $content)) {
-                throw new \Exception('Could not decode content!');
+            if (false === $content || is_null($content)) {
+                throw new \Exception(sprintf('Could not decode content! Content was %s', $request->getContent()));
             }
 
-            $yieldTodayTotal = intval($content['value']);
+            if (1 !== count($content)) {
+                throw new \Exception('Invalid amount of input params!');
+            }
+
+            $key = array_key_first($content);
+            $yieldTodayTotal = intval($content[$key] ?? 0);
 
             $em->getRepository(SolarDaily::class)->update($yieldTodayTotal);
             $em->getRepository(SolarHourly::class)->update($yieldTodayTotal);
