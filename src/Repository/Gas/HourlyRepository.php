@@ -49,9 +49,9 @@ WITH RECURSIVE all_dates(dt) AS (
 SELECT UNIX_TIMESTAMP(ad.dt) as timestamp, IFNULL(consumption,0) as consumption
 FROM all_dates as ad
 LEFT JOIN (
-    SELECT DATE_FORMAT(ts, '%Y-%m-%d %H:00') AS myday, ROUND(value * 0.01) AS consumption 
+    SELECT DATE_FORMAT(ts, '%Y-%m-%d %H:00') AS myday, value * 0.01 AS consumption 
     FROM gas_hourly
-    WHERE ts >= DATE_SUB(now(), INTERVAL 24 HOUR) 
+    WHERE ts >= DATE_SUB(now(), INTERVAL :hours HOUR) 
     ORDER BY ts ASC
 ) gd
 ON DATE_FORMAT(ad.dt, '%Y-%m-%d %H:00') = gd.myday
