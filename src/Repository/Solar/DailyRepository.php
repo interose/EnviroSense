@@ -98,7 +98,7 @@ SELECT DATE_FORMAT(ad.dt, '%Y-%m') as ym, GROUP_CONCAT(DISTINCT DATE_FORMAT(ad.d
 FROM all_dates as ad
 LEFT JOIN (
 	SELECT DATE_FORMAT(ts, '%Y-%m') AS my_month , ROUND(SUM(value) / 1000) AS yield
-	FROM power_daily
+	FROM solar_daily
 	GROUP BY DATE_FORMAT(ts, '%Y-%m')
 	ORDER BY DATE_FORMAT(ts, '%Y-%m') ASC
 ) gd
@@ -129,7 +129,7 @@ SELECT DATE_FORMAT(ad.dt, '%Y-%m') as ym, GROUP_CONCAT(DISTINCT DATE_FORMAT(ad.d
 FROM all_dates as ad
 LEFT JOIN (
 	SELECT DATE_FORMAT(ts, '%Y-%m') AS my_month , ROUND(SUM(value) / 1000) AS yield
-	FROM power_daily
+	FROM solar_daily
 	GROUP BY DATE_FORMAT(ts, '%Y-%m')
 	ORDER BY DATE_FORMAT(ts, '%Y-%m') ASC
 ) gd
