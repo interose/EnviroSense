@@ -20,7 +20,6 @@ use App\Repository\HeatingSystemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -200,9 +199,9 @@ class ApiController extends AbstractController
             }
 
             $key = array_key_first($content);
-            $value = intval($content[$key] ?? 0);
+            $value = $content[$key] ?? '';
 
-            $repository->insert($key, $value);
+            $repository->insert($key, (string) $value);
 
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
