@@ -16,6 +16,9 @@ security:
             lazy: true
             login_throttling: true
             provider: app_user_provider
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2419200 # 4 weeks in seconds
             form_login:
                 login_path: app_login
                 check_path: app_login
