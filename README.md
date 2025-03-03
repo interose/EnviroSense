@@ -5,7 +5,7 @@ EnviroSense is a tool with a REST API and a user interface for collecting and vi
 
 ![Dashboard](/doc/images/01-home.png)
 
-![Example Screen](/doc/images/01-solar.png)
+![Example Screen](/doc/images/02-solar.png)
 
 # Getting Started
 Copy the .env file to .env.local and configure your environment.
