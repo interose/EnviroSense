@@ -55,15 +55,21 @@ class ApiController extends AbstractController
             $record = $parser->parse_sml_hexdata($request->getContent(), 'CRC16_X_25');
             $values = $record['body']['vallist'];
 
+            $repoDaily = $em->getRepository(PowerDaily::class);
+            $repoHourly = $em->getRepository(PowerHourly::class);
+
             foreach ($values as $value) {
                 $obis = $value['OBIS'] ?? '';
 
                 if ('1-0:1.8.0*255' === $obis) {
-                    $em->getRepository(PowerDaily::class)->update($value['value'], (int) log10($value['scaler']));
+                    $repoDaily->update($value['value'], (int) log10($value['scaler']));
                 } elseif ('1-0:16.7.0*255' === $obis) {
-                    $em->getRepository(PowerHourly::class)->update($value['value'], (int) log10($value['scaler']));
+                    $repoHourly->update($value['value'], (int) log10($value['scaler']));
                 }
             }
+
+            $repoDaily->updateTodaysConsumption();
+
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
 
