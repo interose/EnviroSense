@@ -45,15 +45,15 @@ SQL;
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = <<<SQL
-UPDATE power_daily as dest,
+UPDATE photovoltaics_daily as dest,
 (
 	SELECT total
-	FROM power_daily
+	FROM photovoltaics_daily
 	WHERE ts = DATE_FORMAT(NOW(), '%Y-%c-%d')
 ) as today,
 (
 	SELECT total
-	FROM power_daily
+	FROM photovoltaics_daily
 	WHERE ts = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%c-%d')
 ) as yesterday
 SET dest.value = (today.total - yesterday.total)

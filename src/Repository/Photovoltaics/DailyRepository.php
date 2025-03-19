@@ -39,6 +39,32 @@ SQL;
     }
 
     /**
+     * @throws Exception
+     */
+    public function updateTodaysYield(): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+UPDATE photovoltaics_daily as dest,
+(
+	SELECT total
+	FROM photovoltaics_daily
+	WHERE ts = DATE_FORMAT(NOW(), '%Y-%c-%d')
+) as today,
+(
+	SELECT total
+	FROM photovoltaics_daily
+	WHERE ts = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%c-%d')
+) as yesterday
+SET dest.value = (today.total - yesterday.total)
+WHERE 
+ts = DATE_FORMAT(NOW(), '%Y-%c-%d');
+SQL;
+        $stmt = $conn->prepare($sql);
+        $stmt->executeStatement();
+    }
+
+    /**
      * Returns the todays pv yield
      */
     public function getTodaysYield()
