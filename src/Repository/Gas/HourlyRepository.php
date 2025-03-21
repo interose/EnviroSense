@@ -35,6 +35,9 @@ SQL;
         $conn->executeStatement($sql);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getLastHours(int $hours = 48)
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -58,7 +61,9 @@ ON DATE_FORMAT(ad.dt, '%Y-%m-%d %H:00') = gd.myday
 ORDER BY ad.dt ASC
 SQL;
 
-        $resultSet = $conn->executeQuery($sql, ['hours' => $hours]);
+        $resultSet = $conn->executeQuery($sql, [
+            'hours' => $hours,
+        ]);
 
         return $resultSet->fetchAllAssociative();
     }

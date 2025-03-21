@@ -104,7 +104,7 @@ class ApiController extends AbstractController
             $em->getRepository(PvDaily::class)->update($total);
             $em->getRepository(PvHourly::class)->update($current);
 
-            $em->getRepository(PvDaily::class)->updateTodaysConsumption();
+            $em->getRepository(PvDaily::class)->updateTodaysYield();
         } catch (\Exception $e) {
             $logger->error($e->getMessage());
 

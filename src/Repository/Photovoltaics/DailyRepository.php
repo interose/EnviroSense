@@ -4,8 +4,8 @@ namespace App\Repository\Photovoltaics;
 
 use App\Entity\Photovoltaics\Daily;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Exception;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Daily>
@@ -65,7 +65,8 @@ SQL;
     }
 
     /**
-     * Returns the todays pv yield
+     * Returns the todays pv yield.
+     * @throws Exception
      */
     public function getTodaysYield()
     {
@@ -81,7 +82,8 @@ SQL;
     }
 
     /**
-     * Returns the pv yield of the last days in kWh
+     * Returns the pv yield of the last days in kWh.
+     * @throws Exception
      */
     public function getLastDays(int $lastDays = 7): array
     {
@@ -93,7 +95,8 @@ SQL;
     }
 
     /**
-     * Return the pv yield grouped by year in kWh
+     * Return the pv yield grouped by year in kWh.
+     * @throws Exception
      */
     public function getGroupedByYear(): array
     {
@@ -105,7 +108,8 @@ SQL;
     }
 
     /**
-     * Return the pv yield grouped by month in kWh
+     * Return the pv yield grouped by month in kWh.
+     * @throws Exception
      */
     public function getLastMonthsByMonths(int $lastMonths = 7): array
     {
@@ -113,7 +117,7 @@ SQL;
         $sql = <<<SQL
 WITH RECURSIVE all_dates(dt) AS (
     -- anchor
-    SELECT DATE_SUB(now(), INTERVAL $lastMonths MONTH) dt
+    SELECT DATE_SUB(now(), INTERVAL :lastMonths MONTH) dt
     UNION ALL 
     -- recursion with stop condition
     SELECT dt + interval 1 MONTH FROM all_dates WHERE dt + interval 1 MONTH <= now()
@@ -130,13 +134,16 @@ ON DATE_FORMAT(ad.dt, '%Y-%m') = gd.my_month
 GROUP BY ym
 ORDER BY ym ASC;
 SQL;
-        $resultSet = $conn->executeQuery($sql);
+        $resultSet = $conn->executeQuery($sql, [
+            'lastMonths' => $lastMonths,
+        ]);
 
         return $resultSet->fetchAllAssociative();
     }
 
     /**
-     * Return the solar yield grouped by month in kWh
+     * Return the solar yield grouped by month in kWh.
+     * @throws Exception
      */
     public function getLastMonthsByMonthsYearBefore(int $lastMonths = 7): array
     {
@@ -144,7 +151,7 @@ SQL;
         $sql = <<<SQL
 WITH RECURSIVE all_dates(dt) AS (
     -- anchor
-    SELECT DATE_SUB(DATE_SUB(now(), INTERVAL 1 YEAR), INTERVAL $lastMonths MONTH) dt
+    SELECT DATE_SUB(DATE_SUB(now(), INTERVAL 1 YEAR), INTERVAL :lastMonths MONTH) dt
     UNION ALL 
     -- recursion with stop condition
     SELECT dt + interval 1 MONTH FROM all_dates WHERE dt + interval 1 MONTH <= DATE_SUB(now(), INTERVAL 1 YEAR)
@@ -161,7 +168,9 @@ ON DATE_FORMAT(ad.dt, '%Y-%m') = gd.my_month
 GROUP BY ym
 ORDER BY ym ASC;
 SQL;
-        $resultSet = $conn->executeQuery($sql);
+        $resultSet = $conn->executeQuery($sql, [
+            'lastMonths' => $lastMonths,
+        ]);
 
         return $resultSet->fetchAllAssociative();
     }

@@ -5,6 +5,7 @@ namespace App\Repository\Anker;
 use App\Entity\Anker\Hourly;
 use App\Lib\AnkerHourlyDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,9 @@ class HourlyRepository extends ServiceEntityRepository
         parent::__construct($registry, Hourly::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function add(AnkerHourlyDto $obj)
     {
         $conn = $this->getEntityManager()->getConnection();

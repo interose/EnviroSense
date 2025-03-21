@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\SensorDescription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<SensorDescription>
@@ -22,16 +22,16 @@ class SensorDescriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, SensorDescription::class);
     }
 
-    public function getMacHashMap()
+    public function getMacHashMap(): array
     {
         $sensors = $this->createQueryBuilder('s')
             ->where('s.name IS NOT NULL')
             ->getQuery()
-            ->getResult(Query::HYDRATE_ARRAY)
+            ->getResult(AbstractQuery::HYDRATE_ARRAY)
         ;
 
         $result = [];
-        array_walk($sensors, function ($sensor) use (&$result){
+        array_walk($sensors, function ($sensor) use (&$result) {
             $result[$sensor['mac']] = $sensor;
         });
 

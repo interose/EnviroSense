@@ -45,7 +45,7 @@ SQL;
             $diff = $todayTotal;
         } else {
             // else, try to subtract the previous value from the current value
-            $diff = $todayTotal - intval($prevTotal);
+            $diff = max(0, $todayTotal - intval($prevTotal));
         }
 
         $sql = <<<SQL
@@ -71,7 +71,10 @@ SQL;
         return $result[0] ?? 0;
     }
 
-    public function getLastHours(int $hours = 48)
+    /**
+     * @throws Exception
+     */
+    public function getLastHours(int $hours = 48): array
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = <<<SQL

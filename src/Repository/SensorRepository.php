@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Sensor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -36,7 +37,7 @@ class SensorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function getLatestValues(): array
     {

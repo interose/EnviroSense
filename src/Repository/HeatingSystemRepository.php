@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\HeatingSystem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,6 +22,9 @@ class HeatingSystemRepository extends ServiceEntityRepository
         parent::__construct($registry, HeatingSystem::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getLatestValueByProperty(string $property)
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -33,7 +37,7 @@ class HeatingSystemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function insert(string $name, string $value)
     {

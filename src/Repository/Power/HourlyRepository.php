@@ -4,8 +4,8 @@ namespace App\Repository\Power;
 
 use App\Entity\Power\Hourly;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Exception;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Hourly>
@@ -36,7 +36,8 @@ class HourlyRepository extends ServiceEntityRepository
     }
 
     /**
-     * Returns the current power consumption in watt
+     * Returns the current power consumption in watt.
+     * @throws Exception
      */
     public function getLatestValue()
     {
@@ -49,7 +50,10 @@ class HourlyRepository extends ServiceEntityRepository
         return $result[0] ?? 0;
     }
 
-    public function getLastHours(int $hours = 48)
+    /**
+     * @throws Exception
+     */
+    public function getLastHours(int $hours = 48): array
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT UNIX_TIMESTAMP(ts) as timestamp , ROUND(value * POWER(10, scaler), 2) AS consumption FROM power_hourly WHERE ts > DATE_SUB(NOW(), INTERVAL :hours HOUR) ORDER BY ts ASC';
