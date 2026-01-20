@@ -3,6 +3,10 @@ body, html {
     font-family: system-ui,-apple-system,BlinkMacSystemFont;
 }
 
+.top-container {
+    margin-bottom: 90px;
+}
+
 /* Navbar */
 .navbar-nav {
     flex-grow: 1;
