@@ -35,14 +35,14 @@ class DefaultController extends AbstractController
 
         $current = $em->getRepository(\App\Entity\Power\Hourly::class)->getLastHours(2);
         $lastDays = $daily->getLastDays();
-        $yearly = $daily->getGroupedByYear();
+        $lastYears = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
 
         return $this->render('default/power.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
-            'yearly' => $yearly,
+            'lastYears' => $lastYears,
             'lastMonths' => $lastMonths,
             'lastMonthsYearBefore' => $lastMonthsYearBefore,
         ]);
@@ -55,14 +55,14 @@ class DefaultController extends AbstractController
 
         $current = $em->getRepository(\App\Entity\Photovoltaics\Hourly::class)->getLastHours(12);
         $lastDays = $daily->getLastDays();
-        $yearly = $daily->getGroupedByYear();
+        $lastYears = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
 
         return $this->render('default/photovoltaics.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
-            'yearly' => $yearly,
+            'lastYears' => $lastYears,
             'lastMonths' => $lastMonths,
             'lastMonthsYearBefore' => $lastMonthsYearBefore,
         ]);
@@ -75,14 +75,14 @@ class DefaultController extends AbstractController
 
         $current = $em->getRepository(\App\Entity\Gas\Hourly::class)->getLastHours(12);
         $lastDays = $daily->getLastDays();
-        $yearly = $daily->getGroupedByYear();
+        $lastYears = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
 
         return $this->render('default/gas.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
-            'yearly' => $yearly,
+            'lastYears' => $lastYears,
             'lastMonths' => $lastMonths,
             'lastMonthsYearBefore' => $lastMonthsYearBefore,
         ]);
@@ -95,14 +95,14 @@ class DefaultController extends AbstractController
 
         $current = $em->getRepository(\App\Entity\Solar\Hourly::class)->getLastHours(12);
         $lastDays = $daily->getLastDays();
-        $yearly = $daily->getGroupedByYear();
+        $lastYears = $daily->getGroupedByYear();
         $lastMonths = $daily->getLastMonthsByMonths();
         $lastMonthsYearBefore = $daily->getLastMonthsByMonthsYearBefore();
 
         return $this->render('default/solar.html.twig', [
             'current' => $current,
             'lastDays' => $lastDays,
-            'yearly' => $yearly,
+            'lastYears' => $lastYears,
             'lastMonths' => $lastMonths,
             'lastMonthsYearBefore' => $lastMonthsYearBefore,
         ]);
