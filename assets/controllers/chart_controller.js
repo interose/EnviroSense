@@ -4,9 +4,10 @@ import Highcharts from 'highcharts';
 import { currentChartConfig, historicalChartConfig, baseDataLabelStyle, lastDaysChartConfig } from '../_chartConfig.js';
 
 export default class extends Controller {
-    static targets = ['chartLastDays', 'chartLastMonths', 'chartLastYears', 'loading', 'error'];
+    static targets = ['chartCurrent', 'chartLastDays', 'chartLastMonths', 'chartLastYears', 'loadingOverlay'];
 
     static values = {
+        seriesCurrentUrl: String,
         unit: String,
         color: { type: String, default: '#2563eb' },
         seriesLastDays: { type: Array, default: [] },
@@ -16,6 +17,10 @@ export default class extends Controller {
     }
 
     async connect() {
+        if (this.hasSeriesCurrentUrlValue) {
+            await this.loadFromApi();
+        }
+
         this.renderLastDaysSeries();
         this.renderLastMonthsSeries();
         this.renderLastYearsSeries();
@@ -23,9 +28,51 @@ export default class extends Controller {
 
     disconnect() {
         // Clean up all chart instances
+        this.destroyChart('chartCurrent');
         this.destroyChart('chartLastDays');
         this.destroyChart('chartLastMonths');
         this.destroyChart('chartLastYears');
+    }
+
+    /**
+     * Fetch chart data from API endpoint
+     */
+    async loadFromApi() {
+        this.showLoading();
+
+        try {
+            const response = await fetch(this.seriesCurrentUrlValue);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            this.hideLoading();
+
+            const series = this.prepareTimeseriesData(data.series);
+            this.renderCurrentChart(series);
+
+        } catch (error) {
+            console.error('Chart API error:', error);
+            this.hideLoading();
+        }
+    }
+
+    renderCurrentChart(data) {
+        currentChartConfig.series = [{
+            type: 'area',
+            data: data,
+            color: this.colorValue
+        }];
+
+        currentChartConfig.tooltip = {
+            formatter: function() {
+                return Highcharts.time.dateFormat('%H:%M', this.x)+' Uhr | '+this.y+' '+this.unitValue;
+            }
+        };
+
+        this.chartCurrent = Highcharts.chart(this.chartCurrentTarget, currentChartConfig);
     }
 
     renderLastDaysSeries() {
@@ -81,6 +128,13 @@ export default class extends Controller {
         }));
     }
 
+    prepareTimeseriesData(seriesValue) {
+        return seriesValue.map(item => [
+            item.timestamp * 1000, // Convert to milliseconds
+            parseFloat(item.value)
+        ]);
+    }
+
     /**
      * Create data label configuration with specified decimal places
      */
@@ -108,6 +162,18 @@ export default class extends Controller {
         if (this[chartProperty]) {
             this[chartProperty].destroy();
             this[chartProperty] = null;
+        }
+    }
+
+    showLoading() {
+        if (this.hasLoadingOverlayTarget) {
+            this.loadingOverlayTarget.classList.remove('d-none');
+        }
+    }
+
+    hideLoading() {
+        if (this.hasLoadingOverlayTarget) {
+            this.loadingOverlayTarget.classList.add('d-none');
         }
     }
 }

@@ -3,6 +3,7 @@
 {% block body %}
 <div
     data-controller="chart"
+    data-chart-series-current-url-value="{{ path('app_solar_current') }}"
     data-chart-unit-value="Watt"
     data-chart-color-value="rgb(241,195,76)"
     data-chart-series-last-days-value="{{ lastDays|json_encode|e('html_attr') }}"
@@ -10,10 +11,12 @@
     data-chart-series-last-month-value="{{ lastMonths|json_encode|e('html_attr') }}"
     data-chart-series-last-month-year-before-value="{{ lastMonthsYearBefore|json_encode|e('html_attr') }}"
 >
+    {% include 'default/_loadingOverlay.html.twig' %}
+
     <div class="row g-1 mt-2">
         <div class="chart-wrapper mb-3">
             <h2>Current <small>in W</small></h2>
-            <div id="chartCurrent" class="chart-container"></div>
+            <div data-chart-target="chartCurrent" class="chart-container"></div>
         </div>
 
         <div class="chart-wrapper mb-3">

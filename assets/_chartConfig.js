@@ -29,6 +29,7 @@ export const currentChartConfig = {
         zoomType: 'x',
         backgroundColor: chartBackgroundColor
     },
+    accessibility: { enabled: false},
     title: { text: '' },
     tooltip: { enabled: false },
     credits: { enabled: false },
@@ -71,6 +72,7 @@ export const historicalChartConfig = {
         type: 'line',
         backgroundColor: chartBackgroundColor
     },
+    accessibility: { enabled: false},
     title: { text: '' },
     tooltip: { enabled: false },
     credits: { enabled: false },
@@ -104,6 +106,7 @@ export const lastDaysChartConfig = {
         type: 'column',
         backgroundColor: chartBackgroundColor
     },
+    accessibility: { enabled: false},
     title: { text: '' },
     tooltip: { enabled: false },
     credits: { enabled: false },

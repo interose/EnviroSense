@@ -7,6 +7,18 @@ body, html {
     margin-bottom: 90px;
 }
 
+.my-overlay {
+    backdrop-filter: blur(4px);
+    z-index: 1050;
+}
+.my-overlay p {
+    color: #e0e0e0;
+}
+.my-overlay .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #e0e0e0;
+}
 /* Navbar */
 .navbar-nav {
     flex-grow: 1;
