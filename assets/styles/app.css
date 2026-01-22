@@ -19,6 +19,12 @@ body, html {
     height: 2.5rem;
     color: #e0e0e0;
 }
+
+.turbo-progress-bar {
+    height: 3px;
+    background-color: rgb(237, 86, 27); /* Your Envirosense color */
+}
+
 /* Navbar */
 .navbar-nav {
     flex-grow: 1;

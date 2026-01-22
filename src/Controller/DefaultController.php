@@ -162,7 +162,8 @@ class DefaultController extends AbstractController
             'currentHumidity' => $humSensorAdapter->getCurrentData(),
             'humiditySeries' => $humSensorAdapter->getPastSeries(),
             'currentDewpoint' => $dewSensorAdapter->current,
-            'dewpointSeries' => $dewSensorAdapter->pastSeries,
+            'outsideDewPointSeries' => $dewSensorAdapter->outsideDewPointSeries,
+            'insideDewPointSeries' => $dewSensorAdapter->insideDewPointSeries
         ]);
     }
 }

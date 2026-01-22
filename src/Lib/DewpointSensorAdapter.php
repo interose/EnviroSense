@@ -9,19 +9,38 @@ class DewpointSensorAdapter
     public function __construct(
         private readonly SensorRepository $sensorRepository,
         public array $current = [],
-        public array $pastSeries = [],
+        public array $outsideDewPointSeries = [],
+        public array $insideDewPointSeries = [],
     ) {
     }
 
     public function fetch(): void
     {
-        $series = array_map(function ($item) {
-            $item['dto'] = DewPointDto::hydrateFromArray($item['payload']);
+        $series = [];
 
-            return $item;
-        }, $this->sensorRepository->getLastHoursDewpointValues());
+        foreach ($this->sensorRepository->getLastHoursDewpointValues() as $item) {
+            $dto = DewPointDto::hydrateFromArray($item['payload']);
+            $timestamp = $item['ts']->getTimestamp();
 
-        $this->pastSeries = $series;
+            $series[] = [
+                'ts' => $item['ts'],
+                'outsideTemperature' => $dto->outsideTemperature,
+                'outsideHumidity' => $dto->outsideHumidity,
+                'outsideDewPoint' => $dto->outsideDewPoint,
+                'insideTemperature' => $dto->insideTemperature,
+                'insideHumidity' => $dto->insideHumidity,
+                'insideDewPoint' => $dto->insideDewPoint,
+                'ventilation' => $dto->ventilation,
+            ];
+
+            $this->outsideDewPointSeries[] = [
+                $timestamp * 1000, $dto->outsideDewPoint
+            ];
+
+            $this->insideDewPointSeries[] = [
+                $timestamp * 1000, $dto->insideDewPoint
+            ];
+        }
 
         // series is ordered ASC - so grab the last one
         $current = end($series);

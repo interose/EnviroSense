@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import Highcharts from 'highcharts';
-
 import { currentChartConfig, historicalChartConfig, baseDataLabelStyle, lastDaysChartConfig } from '../_chartConfig.js';
 
 export default class extends Controller {

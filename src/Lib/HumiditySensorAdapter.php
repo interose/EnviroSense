@@ -56,8 +56,7 @@ class HumiditySensorAdapter
 
             if (isset($sensorHashMap[$mac])) {
                 $hum[$mac]['data'][] = [
-                    'ts' => $item['ts']->getTimestamp(),
-                    'humidity' => $item['payload']['h'] ?? 0,
+                    $item['ts']->getTimestamp() * 1000, $item['payload']['h'] ?? 0,
                 ];
             }
         });

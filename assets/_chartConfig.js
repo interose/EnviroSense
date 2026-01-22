@@ -137,6 +137,7 @@ export const lastDaysChartConfig = {
 
 export const baseChartConfig = {
     title: { text: '' },
+    accessibility: { enabled: false},
     tooltip: { enabled: false },
     credits: { enabled: false },
     legend: { enabled: false },
