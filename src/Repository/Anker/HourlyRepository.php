@@ -4,6 +4,8 @@ namespace App\Repository\Anker;
 
 use App\Entity\Anker\Hourly;
 use App\Lib\AnkerHourlyDto;
+use App\Repository\HourlyDataRepositoryInterface;
+use App\Repository\HourlyDataRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,8 +13,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Hourly>
  */
-class HourlyRepository extends ServiceEntityRepository
+class HourlyRepository extends ServiceEntityRepository implements HourlyDataRepositoryInterface
 {
+    use HourlyDataRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);

@@ -3,6 +3,8 @@
 namespace App\Repository\Photovoltaics;
 
 use App\Entity\Photovoltaics\Hourly;
+use App\Repository\HourlyDataRepositoryInterface;
+use App\Repository\HourlyDataRepositoryTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Hourly[]    findAll()
  * @method Hourly[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HourlyRepository extends ServiceEntityRepository
+class HourlyRepository extends ServiceEntityRepository implements HourlyDataRepositoryInterface
 {
+    use HourlyDataRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Hourly::class);

@@ -16,8 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Sensor[]    findAll()
  * @method Sensor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SensorRepository extends ServiceEntityRepository
+class SensorRepository extends ServiceEntityRepository implements HourlyDataRepositoryInterface
 {
+    use HourlyDataRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sensor::class);

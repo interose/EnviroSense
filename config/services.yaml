@@ -22,3 +22,25 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Command\PurgeHourlyCommand:
+        arguments:
+            $hourlyRepositories: !tagged_iterator app.hourly_repository
+
+    App\Repository\Anker\HourlyRepository:
+        tags: ['app.hourly_repository']
+
+    App\Repository\Gas\HourlyRepository:
+        tags: ['app.hourly_repository']
+
+    App\Repository\Photovoltaics\HourlyRepository:
+        tags: ['app.hourly_repository']
+
+    App\Repository\Power\HourlyRepository:
+        tags: ['app.hourly_repository']
+
+    App\Repository\Solar\HourlyRepository:
+        tags: ['app.hourly_repository']
+
+    App\Repository\SensorRepository:
+        tags: ['app.hourly_repository']
