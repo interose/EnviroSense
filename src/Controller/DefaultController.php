@@ -86,7 +86,7 @@ class DefaultController extends AbstractController
         return $this->json([
             'series' => array_map(fn($item) => [
                 'timestamp' => $item['timestamp'],
-                'value' => $item['consumption']
+                'value' => $item['yield']
             ], $current)
         ]);
     }

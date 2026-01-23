@@ -22,7 +22,7 @@ body, html {
 
 .turbo-progress-bar {
     height: 3px;
-    background-color: rgb(237, 86, 27); /* Your Envirosense color */
+    background-color: #909294;
 }
 
 /* Navbar */

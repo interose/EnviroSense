@@ -22,14 +22,6 @@ return [
         'path' => './assets/login.js',
         'entrypoint' => true,
     ],
-    'chart' => [
-        'path' => './assets/chart.js',
-        'entrypoint' => true,
-    ],
-    'chartSensors' => [
-        'path' => './assets/chartSensors.js',
-        'entrypoint' => true,
-    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],

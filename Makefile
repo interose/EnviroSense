@@ -92,6 +92,7 @@ clean: ## Clean the cache and logs
 	rm -rf var/cache/*
 	rm -rf var/log/*
 	rm -rf var/tailwind/*
+	rm -rf public/assets
 
 .PHONY: deploy
 deploy: ## Deploy the project to the remote server
@@ -104,4 +105,5 @@ deploy: ## Deploy the project to the remote server
   		rsync -e "ssh -p $(SSH_PORT) " --exclude-from "exclude-list" -avzh . $(REMOTE_USER)@$(HOST):/var/www/$(PROJECT_NAME) --delete; \
   		ssh -p $(SSH_PORT) $(REMOTE_USER)@$(HOST) "cd /var/www/$(PROJECT_NAME) && composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader"; \
   		ssh -p $(SSH_PORT) $(REMOTE_USER)@$(HOST) "rm -rf /var/www/$(PROJECT_NAME)/var/cache/prod"; \
+  		rm -rf public/assets; \
   	fi

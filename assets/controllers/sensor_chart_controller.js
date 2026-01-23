@@ -14,9 +14,12 @@ export default class extends Controller {
             return;
         }
 
-        console.log(data)
-
         this.renderDewPointChart(data);
+    }
+
+    disconnect() {
+        this.destroyChart('chartDewPoint');
+        this.destroyChart('chartLastHour');
     }
 
     loadChartData() {
@@ -65,8 +68,17 @@ export default class extends Controller {
             }
         };
 
-        Highcharts.chart(this.chartDewPointTarget, {...baseChartConfig, ...chartConfig, ...{series: [data.dewPointInside, data.dewPointOutside]}});
+        this.chartDewPoint = Highcharts.chart(this.chartDewPointTarget, {...baseChartConfig, ...chartConfig, ...{series: [data.dewPointInside, data.dewPointOutside]}});
+        this.chartLastHour = Highcharts.chart(this.chartLastHoursTarget, {...baseChartConfig, ...chartConfig, ...{series: data.humiditySeries}});
+    }
 
-        Highcharts.chart(this.chartLastHoursTarget, {...baseChartConfig, ...chartConfig, ...{series: data.humiditySeries}});
+    /**
+     * Safely destroy a chart instance
+     */
+    destroyChart(chartProperty) {
+        if (this[chartProperty]) {
+            this[chartProperty].destroy();
+            this[chartProperty] = null;
+        }
     }
 }
