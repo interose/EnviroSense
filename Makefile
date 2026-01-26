@@ -9,7 +9,7 @@ LOCAL_PORT ?= 3336
 SSH_PORT ?= 8122
 LOCAL_MYSQL_USER ?= root
 REMOTE_MYSQL_USER ?= root
-PROJECT_NAME ?= EnviroSense
+PROJECT_NAME ?= EnviroSenseFeatAlex
 
 .PHONY: help
 help:

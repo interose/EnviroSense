@@ -19,13 +19,13 @@ class DefaultController extends AbstractController
     public function dashboardAction(DashboardAdapter $adapter): Response
     {
         return $this->render('default/dashboard.html.twig', [
-            'heatingSystem' => $adapter->getHeatingSystemValues(),
-            'humiditySensors' => $adapter->getLatestHumSensorValues(),
+//            'heatingSystem' => $adapter->getHeatingSystemValues(),
+//            'humiditySensors' => $adapter->getLatestHumSensorValues(),
             'power' => $adapter->getActualPowerValues(),
-            'gas' => $adapter->getActualGasValues(),
-            'solar' => $adapter->getActualSolarValues(),
+//            'gas' => $adapter->getActualGasValues(),
+//            'solar' => $adapter->getActualSolarValues(),
             'pv' => $adapter->getActualPvValues(),
-            'dewPointSensor' => $adapter->getLatestDewPointSensorValue(),
+//            'dewPointSensor' => $adapter->getLatestDewPointSensorValue(),
         ]);
     }
 
