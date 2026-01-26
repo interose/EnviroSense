@@ -160,7 +160,7 @@ WITH RECURSIVE all_dates(dt) AS (
 SELECT DATE_FORMAT(ad.dt, '%Y-%m') as ym, GROUP_CONCAT(DISTINCT DATE_FORMAT(ad.dt, '%b')) as monthname, IFNULL(sum(consumption),0) as consumption
 FROM all_dates as ad
 LEFT JOIN (
-	SELECT DATE_FORMAT(ts, '%Y-%m') AS my_month , ROUND(SUM(value) * 0.01) AS consumption
+	SELECT DATE_FORMAT(ts, '%Y-%m') AS my_month , CAST(ROUND(SUM(value) * 0.01) AS SIGNED) AS consumption
 	FROM gas_daily
 	GROUP BY DATE_FORMAT(ts, '%Y-%m')
 	ORDER BY DATE_FORMAT(ts, '%Y-%m') ASC
