@@ -5,13 +5,11 @@
 
 {% block body %}
 <div class="row g-1 mt-2">
-    {% for sensor in power %}
-        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'power' } %}
-    {% endfor %}
+    {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': power.0.value, 'unit': power.0.unit, 'description' : power.0.name, 'type': 'power' } %}
+    {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': power.1.value, 'unit': power.1.unit, 'description' : power.1.name, 'type': 'power' } %}
+    {% include 'default/_dashboardItem.html.twig' with { 'colCount': 4, 'value': power.2.value, 'unit': power.2.unit, 'description' : power.2.name, 'type': 'power' } %}
 
-    {% for sensor in pv %}
-        {% include 'default/_dashboardItem.html.twig' with { 'colCount': 6, 'value': sensor.value, 'unit': sensor.unit, 'description' : sensor.name, 'type': 'pv' } %}
-    {% endfor %}
+    {% include 'default/_dashboardItem.html.twig' with { 'colCount': 12, 'value': power.3.value, 'unit': power.3.unit, 'description' : power.3.name, 'type': 'power' } %}
 </div>
 
 {% endblock %}

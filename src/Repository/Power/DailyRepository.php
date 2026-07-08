@@ -82,6 +82,22 @@ SQL;
     }
 
     /**
+     * Returns the latest overall power consumption
+     * @throws Exception
+     */
+    public function getTotal()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT total * POWER(10, scaler) AS consumption FROM power_daily ORDER BY ts DESC LIMIT 1';
+        $resultSet = $conn->executeQuery($sql);
+
+        $result = $resultSet->fetchFirstColumn();
+
+        return $result[0] ?? 0;
+
+    }
+
+    /**
      * Returns the power consumption of the last days in kWh.
      * @throws Exception
      */

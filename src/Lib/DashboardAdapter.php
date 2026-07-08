@@ -88,6 +88,8 @@ class DashboardAdapter
     public function getActualPowerValues(): array
     {
         $todayConsumption = round($this->powerDailyRepository->getTodaysConsumption() / 1000, 1);
+        $total = round($this->powerDailyRepository->getTotal() / 1000, 1);
+
         $cost = round(($todayConsumption * self::POWER_PRICE) / 100, 1);
         $latest = $this->powerHourlyRepository->getLatestValue();
 
@@ -111,6 +113,10 @@ class DashboardAdapter
             'value' => number_format($cost, 1, ',', '.'),
             'name' => 'today',
             'unit' => '€'
+        ], [
+            'value' => number_format($total, 1, ',', '.'),
+            'name' => 'total',
+            'unit' => 'kWh'
         ]];
     }
 
